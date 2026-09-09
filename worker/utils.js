@@ -1,9 +1,10 @@
 export function corsHeaders(request) {
-  const origin = request.headers.get('Origin') || '';
+  const origin = request?.headers?.get('Origin') || '';
   const allowedOrigins = [
     'http://localhost:3000',
     'http://localhost:5173',
-    'https://your-production-domain.com', // Replace with your domain
+    'https://codesphere.pages.dev',          // अपने Pages domain से बदलें
+    'https://codesphere.someshsoftwareengineer-233.workers.dev', // Worker URL
   ];
   const allowOrigin = allowedOrigins.includes(origin) ? origin : allowedOrigins[0];
   return {
@@ -39,7 +40,7 @@ export function errorResponse(error, status = 400) {
     status,
     headers: {
       'Content-Type': 'application/json',
-      ...corsHeaders({ headers: { get: () => '' } }),
+      ...corsHeaders({ headers: { get: () => '' } }), // dummy request for CORS
     },
   });
 }
@@ -81,7 +82,7 @@ export async function hashPassword(password, salt) {
       hash: 'SHA-256',
     },
     keyMaterial,
-    256 // 32 bytes
+    256
   );
   return Array.from(new Uint8Array(derived))
     .map(b => b.toString(16).padStart(2, '0'))
