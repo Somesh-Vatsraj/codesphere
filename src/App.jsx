@@ -15,46 +15,16 @@ import NotFound from './pages/NotFound';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute';
 
-// 🆕 Inline placeholder components (remove these and uncomment imports below when files exist)
-function Tutorials() {
-  return (
-    <div className="container mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold">All Tutorials</h1>
-      <p>Coming soon – add real content by creating src/pages/Tutorials.jsx</p>
-    </div>
-  );
-}
-function Categories() {
-  return (
-    <div className="container mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold">Categories</h1>
-      <p>Browse posts by category – coming soon.</p>
-    </div>
-  );
-}
-function About() {
-  return (
-    <div className="container mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold">About CodeSphere</h1>
-      <p>Learn to code with practical tutorials.</p>
-    </div>
-  );
-}
-
-// 🔽 Uncomment these imports when the files exist in src/pages/
-// import Tutorials from './pages/Tutorials';
-// import Categories from './pages/Categories';
-// import About from './pages/About';
+// Import the actual page components
+import Tutorials from './pages/Tutorials';
+import Categories from './pages/Categories';
+import About from './pages/About';
 
 function App() {
-  // 🔍 Diagnostic: log the API base URL to help debug data issues
+  // Diagnostic: log the API base URL
   useEffect(() => {
     const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8787';
     console.log('🔗 API Base URL:', apiUrl);
-    console.log('ℹ️ If you see no data, check:');
-    console.log('  1. Your Worker is running (deployed or wrangler dev)');
-    console.log('  2. Your database has published posts (published = 1)');
-    console.log('  3. VITE_API_URL is set correctly in your .env / Pages variables');
   }, []);
 
   return (
@@ -68,7 +38,7 @@ function App() {
           <Route path="/blog/:id" element={<BlogDetail />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
 
-          {/* Full pages – using inline placeholders until real files are added */}
+          {/* Real pages */}
           <Route path="/tutorials" element={<Tutorials />} />
           <Route path="/categories" element={<Categories />} />
           <Route path="/about" element={<About />} />
