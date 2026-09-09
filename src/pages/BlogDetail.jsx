@@ -10,6 +10,7 @@ export default function BlogDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [showScroll, setShowScroll] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   // Track scroll for "Back to Top" button
   useEffect(() => {
@@ -50,6 +51,17 @@ export default function BlogDetail() {
     id: `heading-${i}`,
     text: h.replace(/<[^>]*>/g, ''),
   }));
+
+  // Handle copy with feedback
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      alert('Failed to copy link');
+    }
+  };
 
   if (loading) return <Loading />;
   if (error) return <div className="text-center text-red-500 py-10">{error}</div>;
@@ -156,6 +168,8 @@ export default function BlogDetail() {
       {/* Social Share Buttons */}
       <div className="flex items-center gap-3 mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
         <span className="text-sm text-gray-500 dark:text-gray-400">Share:</span>
+        
+        {/* Twitter */}
         <button
           onClick={() =>
             window.open(
@@ -164,9 +178,12 @@ export default function BlogDetail() {
             )
           }
           className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-primary/20 transition-colors text-lg"
+          aria-label="Share on Twitter"
         >
           🐦
         </button>
+
+        {/* LinkedIn */}
         <button
           onClick={() =>
             window.open(
@@ -175,18 +192,41 @@ export default function BlogDetail() {
             )
           }
           className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-primary/20 transition-colors text-lg"
+          aria-label="Share on LinkedIn"
         >
           🔗
         </button>
-        <button
-          onClick={() => {
-            navigator.clipboard.writeText(window.location.href);
-            alert('Link copied to clipboard!');
-          }}
-          className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-primary/20 transition-colors text-lg"
-        >
-          📋
-        </button>
+
+        {/* Copy Link – enhanced with white background and tooltip */}
+        <div className="relative">
+          <button
+            onClick={handleCopy}
+            className="group flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full shadow-sm hover:shadow-md hover:border-primary/50 transition-all duration-200"
+            aria-label="Copy link"
+          >
+            {copied ? (
+              <>
+                <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span className="text-sm text-green-600 dark:text-green-400 font-medium">Copied!</span>
+              </>
+            ) : (
+              <>
+                <svg className="w-5 h-5 text-gray-600 dark:text-gray-300 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                </svg>
+                <span className="text-sm text-gray-600 dark:text-gray-300 group-hover:text-primary transition-colors">Copy Link</span>
+              </>
+            )}
+          </button>
+          {/* Tooltip shown on hover (only when not copied) */}
+          {!copied && (
+            <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
+              Copy to clipboard
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Related Posts with Thumbnails */}
