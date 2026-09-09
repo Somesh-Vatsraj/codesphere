@@ -123,9 +123,10 @@ export default function BlogDetail() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      {/* Updated grid: center wider (8 columns), sidebars 2 each */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
         {/* ===== LEFT SIDEBAR: CATEGORIES ===== */}
-        <aside className="hidden lg:block lg:col-span-3 order-1">
+        <aside className="hidden lg:block lg:col-span-2 order-1">
           <div className="sticky top-24 bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5 border border-gray-100 dark:border-gray-700">
             <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
               📂 Categories
@@ -162,8 +163,8 @@ export default function BlogDetail() {
           </div>
         </aside>
 
-        {/* ===== CENTER: MAIN POST with white background ===== */}
-        <article className="lg:col-span-6 order-2">
+        {/* ===== CENTER: MAIN POST (wider: col-span-8) ===== */}
+        <article className="lg:col-span-8 order-2">
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-gray-700">
             {/* Featured Image – full width inside card */}
             <div className="relative -mx-0 sm:mx-0 rounded-none overflow-hidden">
@@ -171,14 +172,14 @@ export default function BlogDetail() {
                 <img
                   src={post.image_url}
                   alt={post.title}
-                  className="w-full h-48 sm:h-64 md:h-80 object-cover"
+                  className="w-full h-48 sm:h-64 md:h-96 object-cover"
                   onError={(e) => {
                     e.target.src = 'https://via.placeholder.com/800x400?text=Image+Not+Available';
                     e.target.onerror = null;
                   }}
                 />
               ) : (
-                <div className="w-full h-48 sm:h-64 md:h-80 bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center text-gray-400">
+                <div className="w-full h-48 sm:h-64 md:h-96 bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center text-gray-400">
                   <span>No Image</span>
                 </div>
               )}
@@ -331,7 +332,7 @@ export default function BlogDetail() {
         </article>
 
         {/* ===== RIGHT SIDEBAR: LATEST POSTS ===== */}
-        <aside className="lg:col-span-3 order-3">
+        <aside className="lg:col-span-2 order-3">
           <div className="sticky top-24 bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5 border border-gray-100 dark:border-gray-700">
             <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
               🔥 Latest Posts
