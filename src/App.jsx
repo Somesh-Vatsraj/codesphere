@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useEffect } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -21,6 +21,16 @@ import Categories from './pages/Categories';
 import About from './pages/About';
 
 function App() {
+  // 🔍 Diagnostic: log the API base URL to help debug data issues
+  useEffect(() => {
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8787';
+    console.log('🔗 API Base URL:', apiUrl);
+    console.log('ℹ️ If you see no data, check:');
+    console.log('  1. Your Worker is running (deployed or wrangler dev)');
+    console.log('  2. Your database has published posts (published = 1)');
+    console.log('  3. VITE_API_URL is set correctly in your .env / Pages variables');
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col bg-lightBg dark:bg-darkBg text-gray-900 dark:text-gray-100 transition-colors duration-200">
       <Navbar />
