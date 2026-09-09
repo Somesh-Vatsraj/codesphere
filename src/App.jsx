@@ -15,16 +15,10 @@ import NotFound from './pages/NotFound';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute';
 
-// 🆕 Temporary placeholder components for new pages
-function Tutorials() {
-  return <div className="container mx-auto px-4 py-12"><h1 className="text-3xl font-bold">All Tutorials</h1><p>Coming soon...</p></div>;
-}
-function Categories() {
-  return <div className="container mx-auto px-4 py-12"><h1 className="text-3xl font-bold">Categories</h1><p>Browse posts by category.</p></div>;
-}
-function About() {
-  return <div className="container mx-auto px-4 py-12"><h1 className="text-3xl font-bold">About CodeSphere</h1><p>Learn to code with practical tutorials.</p></div>;
-}
+// Import the actual page components
+import Tutorials from './pages/Tutorials';
+import Categories from './pages/Categories';
+import About from './pages/About';
 
 function App() {
   return (
@@ -37,8 +31,8 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/blog/:id" element={<BlogDetail />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
-          
-          {/* 🆕 New Routes */}
+
+          {/* Full pages */}
           <Route path="/tutorials" element={<Tutorials />} />
           <Route path="/categories" element={<Categories />} />
           <Route path="/about" element={<About />} />
