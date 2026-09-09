@@ -13,16 +13,20 @@ export default function AdminDashboard() {
 
   const fetchData = async () => {
     try {
-      // Use getStats from api.js (which includes credentials: 'include')
+      console.log('Fetching dashboard data...');
       const [postsData, statsData] = await Promise.all([
         getPosts(),
         getStats(),
       ]);
+      console.log('Posts:', postsData);
+      console.log('Stats:', statsData);
       setPosts(postsData);
       setStats(statsData);
+      setError('');
     } catch (err) {
       console.error('Dashboard fetch error:', err);
-      setError(err.message || 'Failed to load dashboard data.');
+      // Show the actual error message from the server
+      setError(`Failed to load dashboard: ${err.message}`);
     } finally {
       setLoading(false);
     }
@@ -60,7 +64,17 @@ export default function AdminDashboard() {
   };
 
   if (loading) return <Loading />;
-  if (error) return <div className="text-red-500 text-center py-10">{error}</div>;
+  if (error) return (
+    <div className="text-center py-10">
+      <div className="text-red-500 font-bold text-xl">{error}</div>
+      <button 
+        onClick={fetchData} 
+        className="mt-4 bg-primary text-white px-4 py-2 rounded hover:bg-secondary"
+      >
+        Retry
+      </button>
+    </div>
+  );
 
   return (
     <div>
