@@ -1,59 +1,48 @@
-import { Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import BlogDetail from './pages/BlogDetail';
-import Profile from './pages/Profile';
-import AdminDashboard from './pages/AdminDashboard';
-import CreatePost from './pages/CreatePost';
-import EditPost from './pages/EditPost';
-import Users from './pages/Users';
-import Unauthorized from './pages/Unauthorized';
-import NotFound from './pages/NotFound';
-import ProtectedRoute from './components/ProtectedRoute';
-import AdminRoute from './components/AdminRoute';
-import Tutorials from './pages/Tutorials';
-import Categories from './pages/Categories';
-import About from './pages/About';
+import { useState, useEffect } from 'react';
+import { getPosts } from '../services/api';
+import BlogCard from '../components/BlogCard';
+import Loading from '../components/Loading';
 
-function App() {
+export default function Tutorials() {
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const data = await getPosts(); // gets all published posts
+        setPosts(data);
+      } catch (err) {
+        setError('Failed to load tutorials.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPosts();
+  }, []);
+
+  if (loading) return <Loading />;
+  if (error) return <div className="text-red-500 text-center py-20">{error}</div>;
+
   return (
-    <div className="min-h-screen flex flex-col bg-lightBg dark:bg-darkBg text-gray-900 dark:text-gray-100 transition-colors duration-200">
-      <Navbar />
-      <main className="flex-grow container mx-auto px-4 py-8">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/blog/:id" element={<BlogDetail />} />
-          <Route path="/unauthorized" element={<Unauthorized />} />
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+        📚 All Tutorials
+      </h1>
+      <p className="text-gray-600 dark:text-gray-400 mb-8">
+        Explore our collection of coding tutorials and guides.
+      </p>
 
-          {/* New Pages */}
-          <Route path="/tutorials" element={<Tutorials />} />
-          <Route path="/categories" element={<Categories />} />
-          <Route path="/about" element={<About />} />
-
-          {/* Protected routes */}
-          <Route element={<ProtectedRoute />}>
-            <Route path="/profile" element={<Profile />} />
-          </Route>
-
-          {/* Admin routes */}
-          <Route element={<AdminRoute />}>
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/admin/posts/create" element={<CreatePost />} />
-            <Route path="/admin/posts/edit/:id" element={<EditPost />} />
-            <Route path="/admin/users" element={<Users />} />
-          </Route>
-
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </main>
-      <Footer />
+      {posts.length === 0 ? (
+        <p className="text-center text-gray-500 dark:text-gray-400 py-20">No tutorials found.</p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {posts.map(post => (
+            <BlogCard key={post.id} post={post} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
-
-export default App;
