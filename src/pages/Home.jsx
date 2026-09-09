@@ -99,18 +99,26 @@ export default function Home() {
 
   return (
     <div>
-      {/* ===== HERO SECTION – with more rounded background ===== */}
+      {/* ===== HERO SECTION – Ultra-rounded floating card ===== */}
       <section
         ref={heroRef}
-        className="relative overflow-hidden rounded-3xl mx-4 md:mx-8 my-4 bg-gradient-to-br from-primary/20 via-secondary/10 to-transparent dark:from-primary/30 dark:via-secondary/20 dark:to-darkBg py-16 md:py-24 shadow-2xl"
+        className="relative overflow-hidden rounded-[3rem] md:rounded-[4rem] mx-4 md:mx-8 my-4 
+                   bg-gradient-to-br from-primary/20 via-secondary/10 to-transparent 
+                   dark:from-primary/30 dark:via-secondary/20 dark:to-darkBg 
+                   py-16 md:py-24 shadow-2xl border border-white/10 dark:border-white/5
+                   backdrop-blur-sm"
       >
-        {/* Animated background blobs – larger and more diffuse */}
+        {/* Animated background blobs – larger, softer, more circular */}
         <div className="absolute inset-0 -z-10">
-          <div className="absolute top-10 left-10 w-80 h-80 bg-primary/30 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-10 right-10 w-96 h-96 bg-secondary/30 rounded-full blur-3xl animate-pulse delay-1000" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-primary/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-20 left-20 w-64 h-64 bg-indigo-400/20 rounded-full blur-2xl animate-pulse delay-2000" />
+          <div className="absolute top-10 left-10 w-96 h-96 bg-primary/30 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-10 right-10 w-[500px] h-[500px] bg-secondary/30 rounded-full blur-3xl animate-pulse delay-1000" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-20 left-20 w-72 h-72 bg-indigo-400/20 rounded-full blur-3xl animate-pulse delay-2000" />
+          <div className="absolute top-20 right-20 w-56 h-56 bg-purple-400/20 rounded-full blur-3xl animate-pulse delay-1500" />
         </div>
+
+        {/* Inner glow overlay */}
+        <div className="absolute inset-0 -z-5 bg-gradient-to-b from-white/5 via-transparent to-black/5 dark:from-white/10 dark:to-black/10" />
 
         <div className="container mx-auto px-4 text-center relative z-10">
           <div className="max-w-3xl mx-auto">
@@ -156,7 +164,7 @@ export default function Home() {
                 placeholder="Search posts..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-700 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition shadow-md"
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-700 rounded-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition shadow-md"
               />
               <svg
                 className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500"
@@ -184,7 +192,7 @@ export default function Home() {
                 <Link
                   key={post.id}
                   to={`/blog/${post.id}`}
-                  className="group bg-white dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden hover:-translate-y-2"
+                  className="group bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden hover:-translate-y-2"
                   style={{ animationDelay: `${idx * 150}ms` }}
                 >
                   {post.image_url && (
