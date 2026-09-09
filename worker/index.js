@@ -1,4 +1,4 @@
-import { handleAuth, handleRegister, handleLogin, handleLogout, handleMe } from './auth';
+import { handleRegister, handleLogin, handleLogout, handleMe } from './auth';
 import { handleGetPosts, handleGetPost, handleCreatePost, handleUpdatePost, handleDeletePost, handlePublishPost, handleAdminStats } from './posts';
 import { handleGetUsers, handleUpdateUserRole, handleDeleteUser } from './users';
 import { authenticate, requireAdmin } from './middleware';
