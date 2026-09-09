@@ -165,39 +165,10 @@ export default function BlogDetail() {
         dangerouslySetInnerHTML={{ __html: post.content }}
       />
 
-      {/* Social Share Buttons */}
+      {/* Copy Link Button – only share action */}
       <div className="flex items-center gap-3 mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
         <span className="text-sm text-gray-500 dark:text-gray-400">Share:</span>
         
-        {/* Twitter */}
-        <button
-          onClick={() =>
-            window.open(
-              `https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(window.location.href)}`,
-              '_blank'
-            )
-          }
-          className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-primary/20 transition-colors text-lg"
-          aria-label="Share on Twitter"
-        >
-          🐦
-        </button>
-
-        {/* LinkedIn */}
-        <button
-          onClick={() =>
-            window.open(
-              `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`,
-              '_blank'
-            )
-          }
-          className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-primary/20 transition-colors text-lg"
-          aria-label="Share on LinkedIn"
-        >
-          🔗
-        </button>
-
-        {/* Copy Link – enhanced with white background and tooltip */}
         <div className="relative">
           <button
             onClick={handleCopy}
