@@ -48,7 +48,6 @@ export default function Login() {
           Don't have an account? <Link to="/register" className="text-primary hover:underline">Register</Link>
         </p>
         <p className="text-xs text-center text-gray-400 mt-4">
-          Demo: admin@example.com / Admin@12345 &nbsp;|&nbsp; user@example.com / User@12345
         </p>
       </form>
     </div>
