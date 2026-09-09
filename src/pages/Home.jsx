@@ -10,8 +10,62 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [category, setCategory] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const heroRef = useRef(null);
 
+  // ---------- TYPING ANIMATION STATE ----------
+  const fullText1 = 'Learn to Code.';
+  const fullText2 = 'Build Something Amazing.';
+  const [displayText1, setDisplayText1] = useState('');
+  const [displayText2, setDisplayText2] = useState('');
+  const [isTypingComplete, setIsTypingComplete] = useState(false);
+  const [showCursor, setShowCursor] = useState(true);
+  const typingTimerRef = useRef(null);
+  const cursorTimerRef = useRef(null);
+
+  useEffect(() => {
+    let charIndex1 = 0;
+    let charIndex2 = 0;
+    let phase = 0; // 0: typing first, 1: pause, 2: typing second, 3: done
+
+    const typeNextChar = () => {
+      if (phase === 0) {
+        if (charIndex1 < fullText1.length) {
+          setDisplayText1(fullText1.slice(0, charIndex1 + 1));
+          charIndex1++;
+          typingTimerRef.current = setTimeout(typeNextChar, 80);
+        } else {
+          phase = 1;
+          typingTimerRef.current = setTimeout(() => {
+            phase = 2;
+            typeNextChar();
+          }, 600);
+        }
+      } else if (phase === 2) {
+        if (charIndex2 < fullText2.length) {
+          setDisplayText2(fullText2.slice(0, charIndex2 + 1));
+          charIndex2++;
+          typingTimerRef.current = setTimeout(typeNextChar, 80);
+        } else {
+          phase = 3;
+          setIsTypingComplete(true);
+        }
+      }
+    };
+
+    typingTimerRef.current = setTimeout(typeNextChar, 300);
+
+    cursorTimerRef.current = setInterval(() => {
+      setShowCursor(prev => !prev);
+    }, 500);
+
+    return () => {
+      clearTimeout(typingTimerRef.current);
+      clearInterval(cursorTimerRef.current);
+    };
+  }, []);
+
+  // ---------- DATA FETCHING ----------
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -26,9 +80,21 @@ export default function Home() {
     fetchPosts();
   }, [category]);
 
-  // Featured posts (first 3 for hero)
-  const featuredPosts = posts.slice(0, 3);
-  const remainingPosts = posts.slice(3);
+  // ---------- SEARCH FILTER ----------
+  const filteredPosts = posts.filter(post => {
+    const term = searchTerm.toLowerCase().trim();
+    if (!term) return true;
+    return (
+      post.title.toLowerCase().includes(term) ||
+      post.category.toLowerCase().includes(term) ||
+      post.excerpt?.toLowerCase().includes(term) ||
+      post.content?.toLowerCase().includes(term)
+    );
+  });
+
+  // Featured posts (first 3 from filtered results)
+  const featuredPosts = filteredPosts.slice(0, 3);
+  const remainingPosts = filteredPosts.slice(3);
 
   if (loading) return <Loading />;
   if (error) return <div className="text-red-500 text-center py-20">{error}</div>;
@@ -40,7 +106,6 @@ export default function Home() {
         ref={heroRef}
         className="relative overflow-hidden bg-gradient-to-br from-primary/10 via-secondary/5 to-transparent dark:from-primary/20 dark:via-secondary/10 dark:to-darkBg py-16 md:py-24"
       >
-        {/* Animated background blobs */}
         <div className="absolute inset-0 -z-10">
           <div className="absolute top-10 left-10 w-64 h-64 bg-primary/20 rounded-full blur-3xl animate-pulse" />
           <div className="absolute bottom-10 right-10 w-80 h-80 bg-secondary/20 rounded-full blur-3xl animate-pulse delay-1000" />
@@ -50,9 +115,21 @@ export default function Home() {
         <div className="container mx-auto px-4 text-center relative z-10">
           <div className="max-w-3xl mx-auto">
             <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white leading-tight">
-              Learn to Code.
-              <span className="block text-primary">Build Something Amazing.</span>
+              <span>
+                {displayText1}
+                {!isTypingComplete && displayText1 === fullText1 && (
+                  <span className={`inline-block w-0.5 h-8 md:h-12 bg-primary ml-1 align-middle ${showCursor ? 'opacity-100' : 'opacity-0'} transition-opacity duration-100`} />
+                )}
+              </span>
+              <br />
+              <span className="text-primary">
+                {displayText2}
+                {(!isTypingComplete || displayText2 === fullText2) && (
+                  <span className={`inline-block w-0.5 h-8 md:h-12 bg-primary ml-1 align-middle ${showCursor ? 'opacity-100' : 'opacity-0'} transition-opacity duration-100`} />
+                )}
+              </span>
             </h1>
+
             <p className="text-xl text-gray-600 dark:text-gray-300 mt-4 max-w-2xl mx-auto">
               Practical coding tutorials, web development guides, and programming resources.
             </p>
@@ -102,34 +179,71 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== CATEGORY FILTER ===== */}
+      {/* ===== CATEGORY FILTER + SEARCH ===== */}
       <div className="container mx-auto px-4 mt-8">
-        <CategoryFilter activeCategory={category} onSelect={setCategory} />
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+          <CategoryFilter activeCategory={category} onSelect={setCategory} />
+          
+          {/* Search Input */}
+          <div className="relative w-full md:w-64">
+            <input
+              type="text"
+              placeholder="Search posts..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-700 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition"
+            />
+            <svg
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+              >
+                ✕
+              </button>
+            )}
+          </div>
+        </div>
       </div>
 
       {/* ===== POSTS GRID ===== */}
       <section id="posts" className="container mx-auto px-4 py-8">
-        {remainingPosts.length === 0 && featuredPosts.length === 0 ? (
-          <p className="text-center text-gray-500 dark:text-gray-400 py-20">
-            No posts found.
-          </p>
+        {filteredPosts.length === 0 ? (
+          <div className="text-center py-20">
+            <p className="text-gray-500 dark:text-gray-400 text-lg">
+              {searchTerm ? 'No posts match your search.' : 'No posts found.'}
+            </p>
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm('')}
+                className="mt-4 text-primary hover:underline"
+              >
+                Clear search
+              </button>
+            )}
+          </div>
         ) : (
           <>
-            {/* Show all posts (including featured) in a grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {posts.map(post => (
+              {filteredPosts.map(post => (
                 <div
                   key={post.id}
                   className="animate-fade-up"
-                  style={{ animationDelay: `${posts.indexOf(post) * 100}ms` }}
+                  style={{ animationDelay: `${filteredPosts.indexOf(post) * 100}ms` }}
                 >
                   <BlogCard post={post} />
                 </div>
               ))}
             </div>
 
-            {/* Load More / Pagination (optional) */}
-            {posts.length > 6 && (
+            {filteredPosts.length > 6 && (
               <div className="text-center mt-10">
                 <button className="px-6 py-2 border border-primary text-primary rounded-full hover:bg-primary hover:text-white transition-colors">
                   Load More
