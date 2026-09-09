@@ -26,7 +26,7 @@ export default function Home() {
   useEffect(() => {
     let charIndex1 = 0;
     let charIndex2 = 0;
-    let phase = 0; // 0: typing first, 1: pause, 2: typing second, 3: done
+    let phase = 0;
 
     const typeNextChar = () => {
       if (phase === 0) {
@@ -92,7 +92,6 @@ export default function Home() {
     );
   });
 
-  // Featured posts (first 3 from filtered results)
   const featuredPosts = filteredPosts.slice(0, 3);
   const remainingPosts = filteredPosts.slice(3);
 
@@ -133,6 +132,7 @@ export default function Home() {
             <p className="text-xl text-gray-600 dark:text-gray-300 mt-4 max-w-2xl mx-auto">
               Practical coding tutorials, web development guides, and programming resources.
             </p>
+
             <div className="mt-8 flex flex-wrap justify-center gap-4">
               <Link
                 to="#latest"
@@ -146,6 +146,33 @@ export default function Home() {
               >
                 Latest Posts
               </Link>
+            </div>
+
+            {/* ===== HERO SEARCH ===== */}
+            <div className="relative max-w-md mx-auto mt-8">
+              <input
+                type="text"
+                placeholder="Search posts..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-700 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition shadow-md"
+              />
+              <svg
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              {searchTerm && (
+                <button
+                  onClick={() => setSearchTerm('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                >
+                  ✕
+                </button>
+              )}
             </div>
           </div>
 
@@ -183,8 +210,8 @@ export default function Home() {
       <div className="container mx-auto px-4 mt-8">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
           <CategoryFilter activeCategory={category} onSelect={setCategory} />
-          
-          {/* Search Input */}
+
+          {/* Search Input (duplicate) – same state as hero */}
           <div className="relative w-full md:w-64">
             <input
               type="text"
