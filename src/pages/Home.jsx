@@ -54,7 +54,6 @@ export default function Home() {
     };
 
     typingTimerRef.current = setTimeout(typeNextChar, 300);
-
     cursorTimerRef.current = setInterval(() => {
       setShowCursor(prev => !prev);
     }, 500);
@@ -100,15 +99,17 @@ export default function Home() {
 
   return (
     <div>
-      {/* ===== HERO SECTION ===== */}
+      {/* ===== HERO SECTION – with more rounded background ===== */}
       <section
         ref={heroRef}
-        className="relative overflow-hidden bg-gradient-to-br from-primary/10 via-secondary/5 to-transparent dark:from-primary/20 dark:via-secondary/10 dark:to-darkBg py-16 md:py-24"
+        className="relative overflow-hidden rounded-3xl mx-4 md:mx-8 my-4 bg-gradient-to-br from-primary/20 via-secondary/10 to-transparent dark:from-primary/30 dark:via-secondary/20 dark:to-darkBg py-16 md:py-24 shadow-2xl"
       >
+        {/* Animated background blobs – larger and more diffuse */}
         <div className="absolute inset-0 -z-10">
-          <div className="absolute top-10 left-10 w-64 h-64 bg-primary/20 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-10 right-10 w-80 h-80 bg-secondary/20 rounded-full blur-3xl animate-pulse delay-1000" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+          <div className="absolute top-10 left-10 w-80 h-80 bg-primary/30 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-10 right-10 w-96 h-96 bg-secondary/30 rounded-full blur-3xl animate-pulse delay-1000" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-primary/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-20 left-20 w-64 h-64 bg-indigo-400/20 rounded-full blur-2xl animate-pulse delay-2000" />
         </div>
 
         <div className="container mx-auto px-4 text-center relative z-10">
@@ -148,7 +149,7 @@ export default function Home() {
               </Link>
             </div>
 
-            {/* ===== HERO SEARCH ===== */}
+            {/* Hero Search */}
             <div className="relative max-w-md mx-auto mt-8">
               <input
                 type="text"
@@ -211,7 +212,6 @@ export default function Home() {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
           <CategoryFilter activeCategory={category} onSelect={setCategory} />
 
-          {/* Search Input (duplicate) – same state as hero */}
           <div className="relative w-full md:w-64">
             <input
               type="text"
