@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getPost, getPosts } from '../services/api';
 import Loading from '../components/Loading';
@@ -6,16 +6,17 @@ import Loading from '../components/Loading';
 export default function BlogDetail() {
   const { id } = useParams();
   const [post, setPost] = useState(null);
-  const [related, setRelated] = useState([]); // related posts (same category)
-  const [latestPosts, setLatestPosts] = useState([]); // latest 5 posts (excluding current)
-  const [categories, setCategories] = useState([]); // list of {name, count}
+  const [related, setRelated] = useState([]);
+  const [latestPosts, setLatestPosts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingSidebar, setLoadingSidebar] = useState(true);
   const [error, setError] = useState('');
   const [showScroll, setShowScroll] = useState(false);
   const [copied, setCopied] = useState(false);
+  const contentRef = useRef(null);
 
-  // --- Scroll handler for "Back to Top" ---
+  // --- Scroll handler ---
   useEffect(() => {
     const handleScroll = () => {
       setShowScroll(window.scrollY > 400);
@@ -24,7 +25,7 @@ export default function BlogDetail() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // --- Main post + related posts ---
+  // --- Main post + related ---
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -47,25 +48,19 @@ export default function BlogDetail() {
     fetchData();
   }, [id]);
 
-  // --- Sidebar data: categories & latest posts ---
+  // --- Sidebar data ---
   useEffect(() => {
     const fetchSidebar = async () => {
       try {
         const allPosts = await getPosts();
-        // Build categories with counts
         const catMap = {};
         allPosts.forEach(p => {
           const cat = p.category || 'Uncategorized';
           if (!catMap[cat]) catMap[cat] = 0;
           catMap[cat]++;
         });
-        const catList = Object.keys(catMap).map(name => ({
-          name,
-          count: catMap[name],
-        }));
+        const catList = Object.keys(catMap).map(name => ({ name, count: catMap[name] }));
         setCategories(catList);
-
-        // Latest 5 posts (excluding current)
         const sorted = allPosts
           .filter(p => p.id !== parseInt(id))
           .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
@@ -73,13 +68,37 @@ export default function BlogDetail() {
         setLatestPosts(sorted);
       } catch (err) {
         console.error('Sidebar fetch error:', err);
-        // Not critical, we can still show the page
       } finally {
         setLoadingSidebar(false);
       }
     };
     fetchSidebar();
   }, [id]);
+
+  // --- Add copy buttons to code blocks ---
+  useEffect(() => {
+    if (!contentRef.current || !post) return;
+    const preElements = contentRef.current.querySelectorAll('pre');
+    preElements.forEach((pre) => {
+      // Avoid adding duplicate buttons
+      if (pre.querySelector('.copy-code-btn')) return;
+      const button = document.createElement('button');
+      button.className = 'copy-code-btn absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-white text-xs px-2 py-1 rounded transition-colors';
+      button.textContent = 'Copy';
+      button.setAttribute('aria-label', 'Copy code');
+      button.addEventListener('click', () => {
+        const code = pre.querySelector('code')?.innerText || pre.innerText;
+        navigator.clipboard.writeText(code).then(() => {
+          button.textContent = 'Copied!';
+          setTimeout(() => { button.textContent = 'Copy'; }, 2000);
+        }).catch(() => {
+          alert('Failed to copy');
+        });
+      });
+      pre.style.position = 'relative';
+      pre.appendChild(button);
+    });
+  }, [post, contentRef.current]);
 
   // --- Table of Contents ---
   const headings = post?.content?.match(/<h2[^>]*>(.*?)<\/h2>/g) || [];
@@ -105,19 +124,16 @@ export default function BlogDetail() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Grid: 1 column on mobile, 2 on md, 3 on lg */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {/* 12‑column grid: center column is wider */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* ===== LEFT SIDEBAR: CATEGORIES ===== */}
-        <aside className="hidden md:block order-1">
+        <aside className="hidden lg:block lg:col-span-3 order-1">
           <div className="sticky top-24">
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
-              📂 Categories
-            </h3>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">📂 Categories</h3>
             {loadingSidebar ? (
               <div className="animate-pulse space-y-2">
                 <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
                 <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
-                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-2/3"></div>
               </div>
             ) : categories.length === 0 ? (
               <p className="text-sm text-gray-500 dark:text-gray-400">No categories</p>
@@ -139,18 +155,15 @@ export default function BlogDetail() {
               </ul>
             )}
             <div className="mt-6 border-t border-gray-200 dark:border-gray-700 pt-4">
-              <Link
-                to="/categories"
-                className="text-sm text-primary hover:underline"
-              >
+              <Link to="/categories" className="text-sm text-primary hover:underline">
                 View all categories →
               </Link>
             </div>
           </div>
         </aside>
 
-        {/* ===== CENTER: MAIN POST ===== */}
-        <article className="md:col-span-1 order-2 lg:col-span-1">
+        {/* ===== CENTER: MAIN POST (wider column) ===== */}
+        <article className="lg:col-span-6 order-2">
           {/* Featured Image */}
           <div className="relative -mx-4 sm:mx-0 rounded-none sm:rounded-xl overflow-hidden mb-8">
             {post.image_url ? (
@@ -218,10 +231,7 @@ export default function BlogDetail() {
               <ul className="space-y-1">
                 {tocItems.map((item, idx) => (
                   <li key={idx}>
-                    <a
-                      href={`#heading-${idx}`}
-                      className="text-primary hover:underline text-sm"
-                    >
+                    <a href={`#heading-${idx}`} className="text-primary hover:underline text-sm">
                       {item.text}
                     </a>
                   </li>
@@ -230,15 +240,16 @@ export default function BlogDetail() {
             </div>
           )}
 
-          {/* Content */}
+          {/* Post Content – with copy buttons for code blocks */}
           <div
+            ref={contentRef}
             className="prose prose-lg dark:prose-invert max-w-none mt-8
               prose-headings:font-bold prose-headings:text-gray-900 dark:prose-headings:text-white
               prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl
               prose-p:text-gray-700 dark:prose-p:text-gray-300
               prose-a:text-primary prose-a:no-underline hover:prose-a:underline
               prose-code:text-primary prose-code:bg-gray-100 dark:prose-code:bg-gray-800 prose-code:px-1 prose-code:py-0.5 prose-code:rounded
-              prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-pre:p-4 prose-pre:rounded-xl
+              prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-pre:p-4 prose-pre:rounded-xl prose-pre:relative
               prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:pl-4 prose-blockquote:italic
               prose-ul:list-disc prose-ol:list-decimal
               prose-img:rounded-xl prose-img:shadow-md
@@ -315,14 +326,13 @@ export default function BlogDetail() {
         </article>
 
         {/* ===== RIGHT SIDEBAR: LATEST POSTS ===== */}
-        <aside className="order-3">
+        <aside className="lg:col-span-3 order-3">
           <div className="sticky top-24">
             <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
               🔥 Latest Posts
             </h3>
             {loadingSidebar ? (
               <div className="animate-pulse space-y-4">
-                <div className="h-16 bg-gray-200 dark:bg-gray-700 rounded"></div>
                 <div className="h-16 bg-gray-200 dark:bg-gray-700 rounded"></div>
                 <div className="h-16 bg-gray-200 dark:bg-gray-700 rounded"></div>
               </div>
@@ -358,10 +368,7 @@ export default function BlogDetail() {
               </ul>
             )}
             <div className="mt-6 border-t border-gray-200 dark:border-gray-700 pt-4">
-              <Link
-                to="/tutorials"
-                className="text-sm text-primary hover:underline"
-              >
+              <Link to="/tutorials" className="text-sm text-primary hover:underline">
                 View all tutorials →
               </Link>
             </div>
@@ -380,7 +387,7 @@ export default function BlogDetail() {
       )}
 
       {/* Mobile categories strip (visible only on small screens) */}
-      <div className="md:hidden mt-8 border-t border-gray-200 dark:border-gray-700 pt-6">
+      <div className="lg:hidden mt-8 border-t border-gray-200 dark:border-gray-700 pt-6">
         <details className="group">
           <summary className="cursor-pointer text-sm font-medium text-gray-900 dark:text-white">
             📂 Categories
