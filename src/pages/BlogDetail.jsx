@@ -80,7 +80,6 @@ export default function BlogDetail() {
     if (!contentRef.current || !post) return;
     const preElements = contentRef.current.querySelectorAll('pre');
     preElements.forEach((pre) => {
-      // Avoid adding duplicate buttons
       if (pre.querySelector('.copy-code-btn')) return;
       const button = document.createElement('button');
       button.className = 'copy-code-btn absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-white text-xs px-2 py-1 rounded transition-colors';
@@ -124,12 +123,13 @@ export default function BlogDetail() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* 12‑column grid: center column is wider */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* ===== LEFT SIDEBAR: CATEGORIES ===== */}
+        {/* ===== LEFT SIDEBAR: CATEGORIES (white background) ===== */}
         <aside className="hidden lg:block lg:col-span-3 order-1">
-          <div className="sticky top-24">
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">📂 Categories</h3>
+          <div className="sticky top-24 bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5 border border-gray-100 dark:border-gray-700">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+              📂 Categories
+            </h3>
             {loadingSidebar ? (
               <div className="animate-pulse space-y-2">
                 <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
@@ -143,10 +143,10 @@ export default function BlogDetail() {
                   <li key={cat.name}>
                     <Link
                       to={`/?category=${encodeURIComponent(cat.name)}`}
-                      className="flex items-center justify-between text-sm text-gray-700 dark:text-gray-300 hover:text-primary transition-colors group"
+                      className="flex items-center justify-between text-sm text-gray-700 dark:text-gray-300 hover:text-primary transition-colors group px-2 py-1 rounded hover:bg-gray-50 dark:hover:bg-gray-700/50"
                     >
                       <span className="group-hover:underline">{cat.name}</span>
-                      <span className="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 px-2 py-0.5 rounded-full text-xs">
+                      <span className="bg-primary/10 text-primary text-xs px-2 py-0.5 rounded-full font-medium">
                         {cat.count}
                       </span>
                     </Link>
@@ -154,15 +154,18 @@ export default function BlogDetail() {
                 ))}
               </ul>
             )}
-            <div className="mt-6 border-t border-gray-200 dark:border-gray-700 pt-4">
-              <Link to="/categories" className="text-sm text-primary hover:underline">
+            <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+              <Link
+                to="/categories"
+                className="text-sm text-primary hover:underline font-medium inline-flex items-center gap-1"
+              >
                 View all categories →
               </Link>
             </div>
           </div>
         </aside>
 
-        {/* ===== CENTER: MAIN POST (wider column) ===== */}
+        {/* ===== CENTER: MAIN POST ===== */}
         <article className="lg:col-span-6 order-2">
           {/* Featured Image */}
           <div className="relative -mx-4 sm:mx-0 rounded-none sm:rounded-xl overflow-hidden mb-8">
@@ -240,7 +243,7 @@ export default function BlogDetail() {
             </div>
           )}
 
-          {/* Post Content – with copy buttons for code blocks */}
+          {/* Post Content */}
           <div
             ref={contentRef}
             className="prose prose-lg dark:prose-invert max-w-none mt-8
@@ -291,7 +294,7 @@ export default function BlogDetail() {
             </div>
           </div>
 
-          {/* Related Posts (same category) */}
+          {/* Related Posts */}
           {related.length > 0 && (
             <section className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
               <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
@@ -325,10 +328,10 @@ export default function BlogDetail() {
           )}
         </article>
 
-        {/* ===== RIGHT SIDEBAR: LATEST POSTS ===== */}
+        {/* ===== RIGHT SIDEBAR: LATEST POSTS (white background) ===== */}
         <aside className="lg:col-span-3 order-3">
-          <div className="sticky top-24">
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
+          <div className="sticky top-24 bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5 border border-gray-100 dark:border-gray-700">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
               🔥 Latest Posts
             </h3>
             {loadingSidebar ? (
@@ -344,7 +347,7 @@ export default function BlogDetail() {
                   <li key={p.id}>
                     <Link
                       to={`/blog/${p.id}`}
-                      className="group flex items-start gap-3 hover:bg-gray-50 dark:hover:bg-gray-800/50 p-2 rounded-lg transition-colors"
+                      className="group flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
                     >
                       {p.image_url && (
                         <img
@@ -367,8 +370,11 @@ export default function BlogDetail() {
                 ))}
               </ul>
             )}
-            <div className="mt-6 border-t border-gray-200 dark:border-gray-700 pt-4">
-              <Link to="/tutorials" className="text-sm text-primary hover:underline">
+            <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+              <Link
+                to="/tutorials"
+                className="text-sm text-primary hover:underline font-medium inline-flex items-center gap-1"
+              >
                 View all tutorials →
               </Link>
             </div>
@@ -386,13 +392,13 @@ export default function BlogDetail() {
         </button>
       )}
 
-      {/* Mobile categories strip (visible only on small screens) */}
+      {/* Mobile categories strip */}
       <div className="lg:hidden mt-8 border-t border-gray-200 dark:border-gray-700 pt-6">
         <details className="group">
           <summary className="cursor-pointer text-sm font-medium text-gray-900 dark:text-white">
             📂 Categories
           </summary>
-          <div className="mt-3">
+          <div className="mt-3 bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm">
             {loadingSidebar ? (
               <div className="animate-pulse space-y-2">
                 <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
