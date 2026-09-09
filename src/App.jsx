@@ -1,5 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
-import { useEffect } from 'react';    // ✅ यह सही है
+import { useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -16,36 +16,12 @@ import NotFound from './pages/NotFound';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute';
 
-// ----- Inline components (no external files) -----
-function Tutorials() {
-  return (
-    <div className="container mx-auto px-4 py-12 text-center">
-      <h1 className="text-4xl font-bold text-gray-900 dark:text-white">📚 All Tutorials</h1>
-      <p className="text-gray-600 dark:text-gray-400 mt-4">Coming soon – create <code>src/pages/Tutorials.jsx</code> to display real data.</p>
-    </div>
-  );
-}
-
-function Categories() {
-  return (
-    <div className="container mx-auto px-4 py-12 text-center">
-      <h1 className="text-4xl font-bold text-gray-900 dark:text-white">📂 Categories</h1>
-      <p className="text-gray-600 dark:text-gray-400 mt-4">Browse posts by category – coming soon.</p>
-    </div>
-  );
-}
-
-function About() {
-  return (
-    <div className="container mx-auto px-4 py-12 text-center">
-      <h1 className="text-4xl font-bold text-gray-900 dark:text-white">About CodeSphere</h1>
-      <p className="text-gray-600 dark:text-gray-400 mt-4">Learn to code with practical tutorials.</p>
-    </div>
-  );
-}
+// 🆕 अब असली पेज इम्पोर्ट करें
+import Tutorials from './pages/Tutorials';
+import Categories from './pages/Categories';
+import About from './pages/About';
 
 function App() {
-  // Diagnostic log
   useEffect(() => {
     const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8787';
     console.log('🔗 API Base URL:', apiUrl);
@@ -62,6 +38,7 @@ function App() {
           <Route path="/blog/:id" element={<BlogDetail />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
 
+          {/* अब ये रियल पेज दिखाएँगे */}
           <Route path="/tutorials" element={<Tutorials />} />
           <Route path="/categories" element={<Categories />} />
           <Route path="/about" element={<About />} />
