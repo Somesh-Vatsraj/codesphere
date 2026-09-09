@@ -13,9 +13,16 @@ const categoryColors = {
   PHP: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
   Database: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
 };
+
 const categoryIcons = {
-  React: '⚛️', JavaScript: '🟨', CSS: '🎨', HTML: '🌐',
-  'Node.js': '🟩', Python: '🐍', PHP: '🐘', Database: '🗄️',
+  React: '⚛️',
+  JavaScript: '🟨',
+  CSS: '🎨',
+  HTML: '🌐',
+  'Node.js': '🟩',
+  Python: '🐍',
+  PHP: '🐘',
+  Database: '🗄️',
 };
 
 export default function Categories() {
@@ -37,8 +44,9 @@ export default function Categories() {
     fetchPosts();
   }, []);
 
+  // Group posts by category
   const categoryMap = {};
-  posts.forEach(post => {
+  posts.forEach((post) => {
     const cat = post.category || 'Uncategorized';
     if (!categoryMap[cat]) categoryMap[cat] = [];
     categoryMap[cat].push(post);
@@ -49,17 +57,25 @@ export default function Categories() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">📂 Categories</h1>
-      <p className="text-gray-600 dark:text-gray-400 mb-8">Browse all posts by category. Click a category to filter posts.</p>
+      <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+        📂 Categories
+      </h1>
+      <p className="text-gray-600 dark:text-gray-400 mb-8">
+        Browse all posts by category. Click a category to filter posts.
+      </p>
+
       {Object.keys(categoryMap).length === 0 ? (
-        <p className="text-center text-gray-500 dark:text-gray-400 py-20">No categories found.</p>
+        <p className="text-center text-gray-500 dark:text-gray-400 py-20">
+          No categories found.
+        </p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {Object.keys(categoryMap).map(cat => {
+          {Object.keys(categoryMap).map((cat) => {
             const count = categoryMap[cat].length;
             const colorClass = categoryColors[cat] || 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300';
             const icon = categoryIcons[cat] || '📁';
             const examplePost = categoryMap[cat][0];
+
             return (
               <Link
                 key={cat}
@@ -77,10 +93,16 @@ export default function Categories() {
                 <div className="p-6">
                   <div className="flex items-center gap-2">
                     <span className="text-2xl">{icon}</span>
-                    <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${colorClass}`}>{cat}</span>
+                    <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${colorClass}`}>
+                      {cat}
+                    </span>
                   </div>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">{count} {count === 1 ? 'post' : 'posts'}</p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 group-hover:text-primary transition-colors">View all →</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">
+                    {count} {count === 1 ? 'post' : 'posts'}
+                  </p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 group-hover:text-primary transition-colors">
+                    View all →
+                  </p>
                 </div>
               </Link>
             );
