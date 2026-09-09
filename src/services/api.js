@@ -16,7 +16,7 @@ async function fetcher(endpoint, options = {}) {
   return json.data;
 }
 
-// Auth
+// ---------- AUTH ----------
 export const login = (email, password) =>
   fetcher('/api/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) });
 
@@ -27,7 +27,7 @@ export const logout = () => fetcher('/api/auth/logout', { method: 'POST' });
 
 export const getMe = () => fetcher('/api/auth/me');
 
-// Posts
+// ---------- POSTS ----------
 export const getPosts = (category = '') =>
   fetcher(`/api/posts${category ? `?category=${encodeURIComponent(category)}` : ''}`);
 
@@ -45,9 +45,12 @@ export const deletePost = (id) =>
 export const togglePublish = (id, published) =>
   fetcher(`/api/posts/${id}/publish`, { method: 'PATCH', body: JSON.stringify({ published }) });
 
-// Admin Users
+// ---------- ADMIN: USERS ----------
 export const getUsers = () => fetcher('/api/admin/users');
 export const updateUserRole = (userId, role) =>
   fetcher(`/api/admin/users/${userId}/role`, { method: 'PUT', body: JSON.stringify({ role }) });
 export const deleteUser = (userId) =>
   fetcher(`/api/admin/users/${userId}`, { method: 'DELETE' });
+
+// ---------- ADMIN: STATS ----------
+export const getStats = () => fetcher('/api/admin/stats');
