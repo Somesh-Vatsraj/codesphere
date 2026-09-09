@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8787';
+const API_BASE = import.meta.env.VITE_API_URL || 'https://codesphere.someshsoftwareengineer-233.workers.dev';
 
 async function fetcher(endpoint, options = {}) {
   const response = await fetch(`${API_BASE}${endpoint}`, {
