@@ -11,14 +11,18 @@ export default function Tutorials() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const data = await getPosts(); // gets all published posts
-        setPosts(data);
+        console.log('Tutorials: Fetching posts...');
+        const data = await getPosts();
+        console.log('Tutorials: Data received:', data);
+        setPosts(data || []);
       } catch (err) {
-        setError('Failed to load tutorials.');
+        console.error('Tutorials: Error fetching posts:', err);
+        setError('Failed to load tutorials. Please try again.');
       } finally {
         setLoading(false);
       }
     };
+
     fetchPosts();
   }, []);
 
@@ -27,18 +31,23 @@ export default function Tutorials() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-        📚 All Tutorials
-      </h1>
-      <p className="text-gray-600 dark:text-gray-400 mb-8">
-        Explore our collection of coding tutorials and guides.
-      </p>
+      <div className="mb-8">
+        <h1 className="text-4xl font-bold text-gray-900 dark:text-white">📚 All Tutorials</h1>
+        <p className="text-gray-600 dark:text-gray-400 mt-2">
+          Explore our collection of coding tutorials and guides.
+        </p>
+      </div>
 
       {posts.length === 0 ? (
-        <p className="text-center text-gray-500 dark:text-gray-400 py-20">No tutorials found.</p>
+        <div className="text-center py-20">
+          <p className="text-gray-500 dark:text-gray-400 text-lg">No tutorials found.</p>
+          <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
+            Make sure you have published posts in the database.
+          </p>
+        </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {posts.map(post => (
+          {posts.map((post) => (
             <BlogCard key={post.id} post={post} />
           ))}
         </div>
