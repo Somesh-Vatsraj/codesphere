@@ -17,7 +17,7 @@ export default function Navbar() {
   return (
     <nav className="sticky top-0 z-50 bg-white/80 dark:bg-darkBg/80 backdrop-blur-sm border-b border-gray-200/50 dark:border-gray-800/50 shadow-sm">
       <div className="container mx-auto px-4 flex justify-between items-center h-16">
-        {/* Logo with code icon */}
+        {/* Logo */}
         <Link to="/" className="flex items-center gap-2 text-2xl font-bold text-primary">
           <span className="text-3xl">&lt;/&gt;</span>
           <span>CodeSphere</span>
@@ -28,13 +28,13 @@ export default function Navbar() {
           <Link to="/" className="text-gray-700 dark:text-gray-300 hover:text-primary transition-colors">
             Home
           </Link>
-          <Link to="/" className="text-gray-700 dark:text-gray-300 hover:text-primary transition-colors">
+          <Link to="/tutorials" className="text-gray-700 dark:text-gray-300 hover:text-primary transition-colors">
             Tutorials
           </Link>
-          <Link to="/" className="text-gray-700 dark:text-gray-300 hover:text-primary transition-colors">
+          <Link to="/categories" className="text-gray-700 dark:text-gray-300 hover:text-primary transition-colors">
             Categories
           </Link>
-          <Link to="/" className="text-gray-700 dark:text-gray-300 hover:text-primary transition-colors">
+          <Link to="/about" className="text-gray-700 dark:text-gray-300 hover:text-primary transition-colors">
             About
           </Link>
 
@@ -102,13 +102,13 @@ export default function Navbar() {
           <Link to="/" className="block text-gray-700 dark:text-gray-300 hover:text-primary transition-colors">
             Home
           </Link>
-          <Link to="/" className="block text-gray-700 dark:text-gray-300 hover:text-primary transition-colors">
+          <Link to="/tutorials" className="block text-gray-700 dark:text-gray-300 hover:text-primary transition-colors">
             Tutorials
           </Link>
-          <Link to="/" className="block text-gray-700 dark:text-gray-300 hover:text-primary transition-colors">
+          <Link to="/categories" className="block text-gray-700 dark:text-gray-300 hover:text-primary transition-colors">
             Categories
           </Link>
-          <Link to="/" className="block text-gray-700 dark:text-gray-300 hover:text-primary transition-colors">
+          <Link to="/about" className="block text-gray-700 dark:text-gray-300 hover:text-primary transition-colors">
             About
           </Link>
 
